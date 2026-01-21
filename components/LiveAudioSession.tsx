@@ -75,9 +75,15 @@ export const LiveAudioSession: React.FC<{ onClose: () => void }> = ({ onClose })
   const startSession = async () => {
     try {
       const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-      inputCtxRef.current = new AudioContext({ sampleRate: 16000 });
-      outputCtxRef.current = new AudioContext({ sampleRate: 24000 });
+      const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
       
+      inputCtxRef.current = new AudioCtxClass({ sampleRate: 16000 });
+      outputCtxRef.current = new AudioCtxClass({ sampleRate: 24000 });
+      
+      // Auto-resume contexts (required for browsers)
+      if (inputCtxRef.current.state === 'suspended') await inputCtxRef.current.resume();
+      if (outputCtxRef.current.state === 'suspended') await outputCtxRef.current.resume();
+
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       
       const sessionPromise = ai.live.connect({
@@ -106,6 +112,9 @@ export const LiveAudioSession: React.FC<{ onClose: () => void }> = ({ onClose })
             const audioStr = message.serverContent?.modelTurn?.parts[0]?.inlineData?.data;
             if (audioStr && outputCtxRef.current) {
               const ctx = outputCtxRef.current;
+              // Ensure output context is ready
+              if (ctx.state === 'suspended') await ctx.resume();
+
               nextStartTimeRef.current = Math.max(nextStartTimeRef.current, ctx.currentTime);
               
               const audioBuffer = await decodeAudioData(decode(audioStr), ctx, 24000, 1);
@@ -124,21 +133,24 @@ export const LiveAudioSession: React.FC<{ onClose: () => void }> = ({ onClose })
 
             if (message.serverContent?.interrupted) {
               for (const source of sourcesRef.current.values()) {
-                source.stop();
+                try { source.stop(); } catch(e) {}
               }
               sourcesRef.current.clear();
               nextStartTimeRef.current = 0;
             }
           },
-          onerror: (e) => setStatus('Communication breach. Check mic.'),
+          onerror: (e) => {
+            console.error("Live session error", e);
+            setStatus('Communication error. Check mic.');
+          },
           onclose: () => onClose()
         },
         config: {
           responseModalities: [Modality.AUDIO],
-          systemInstruction: SYSTEM_INSTRUCTION + "\n\nProvide world-class real-time guidance.",
+          systemInstruction: SYSTEM_INSTRUCTION + "\n\nProvide world-class real-time guidance via audio conversation.",
           speechConfig: { 
             voiceConfig: { 
-              prebuiltVoiceConfig: { voiceName: 'Puck' } // Youthful male voice profile
+              prebuiltVoiceConfig: { voiceName: 'Puck' } 
             } 
           }
         }
@@ -151,32 +163,35 @@ export const LiveAudioSession: React.FC<{ onClose: () => void }> = ({ onClose })
   };
 
   const stopSession = () => {
-    sessionPromiseRef.current?.then(s => s.close());
+    sessionPromiseRef.current?.then(s => {
+      try { s.close(); } catch(e) {}
+    });
     inputCtxRef.current?.close();
     outputCtxRef.current?.close();
-    sourcesRef.current.forEach(s => s.stop());
+    sourcesRef.current.forEach(s => {
+      try { s.stop(); } catch(e) {}
+    });
   };
 
   return (
-    <div className="fixed inset-0 bg-blue-900/95 backdrop-blur-2xl z-[100] flex flex-col items-center justify-center p-8">
-      <div className="w-32 h-32 bg-amber-500 rounded-full flex items-center justify-center animate-pulse mb-8 shadow-[0_0_80px_rgba(245,158,11,0.6)] border-4 border-white/20">
-        <svg className="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div className="fixed inset-0 bg-[#001040]/98 backdrop-blur-xl z-[100] flex flex-col items-center justify-center p-6 text-center">
+      <div className="w-24 h-24 md:w-32 md:h-32 bg-amber-500 rounded-full flex items-center justify-center animate-pulse mb-8 shadow-2xl border-4 border-white/10">
+        <svg className="w-12 h-12 md:w-16 md:h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
         </svg>
       </div>
-      <h2 className="text-4xl font-serif font-bold text-white mb-2 tracking-tight">Guruji Live Session</h2>
-      <p className="text-blue-200 mb-12 text-center max-w-md font-medium tracking-wide">{status}</p>
+      <h2 className="text-3xl md:text-4xl font-serif font-bold text-white mb-2 tracking-tight">Guruji Live <span className="text-emerald-500">Session</span></h2>
+      <p className="text-blue-200 mb-10 text-sm font-medium tracking-wide px-4">{status}</p>
       
       <div className="flex flex-col items-center space-y-8 w-full max-w-xs">
-        <div className="flex space-x-3 items-end h-16">
-          {[...Array(8)].map((_, i) => (
+        <div className="flex space-x-2 items-end h-12">
+          {[...Array(6)].map((_, i) => (
             <div 
               key={i} 
-              className="w-1.5 bg-amber-400 rounded-full animate-bounce" 
+              className="w-1 bg-amber-400 rounded-full animate-bounce" 
               style={{ 
-                height: `${20 + Math.random() * 40}px`,
-                animationDelay: `${i * 0.1}s`,
-                animationDuration: '0.8s'
+                height: `${15 + Math.random() * 30}px`,
+                animationDelay: `${i * 0.15}s`,
               }}
             ></div>
           ))}
@@ -184,14 +199,14 @@ export const LiveAudioSession: React.FC<{ onClose: () => void }> = ({ onClose })
         
         <button 
           onClick={onClose} 
-          className="w-full py-4 bg-white text-[#001040] font-black uppercase tracking-[0.3em] rounded-2xl shadow-2xl hover:bg-amber-500 hover:text-white transition-all transform hover:scale-105 active:scale-95 text-xs"
+          className="w-full py-4 bg-white text-[#001040] font-black uppercase tracking-[0.2em] rounded-2xl shadow-xl hover:bg-amber-500 hover:text-white transition-all transform active:scale-95 text-[10px]"
         >
           End Consultation 🦅
         </button>
       </div>
       
-      <div className="absolute bottom-12 text-center opacity-30">
-        <p className="text-[10px] text-white font-black uppercase tracking-[0.5em]">Real-time encrypted connection</p>
+      <div className="absolute bottom-8 opacity-40">
+        <p className="text-[8px] text-white font-black uppercase tracking-[0.4em]">Secure Vision Gateway Active</p>
       </div>
     </div>
   );

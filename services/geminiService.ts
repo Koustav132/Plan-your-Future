@@ -57,7 +57,7 @@ export const getGeminiProResponse = async (
   Please respond ONLY in ${language}. Maintain the Professional Guruji persona.`;
 
   const response = await ai.models.generateContent({
-    model: "gemini-3-pro-preview",
+    model: "gemini-3-flash-preview", // Switched to Flash for maximum speed
     contents: [
       ...history.slice(0, -1),
       { role: "user", parts: currentParts }
@@ -65,7 +65,7 @@ export const getGeminiProResponse = async (
     config: {
       systemInstruction: SYSTEM_INSTRUCTION + "\n\n" + languageInstruction + "\n\n" + documentPrompt + "\n\nACTIVE SESSION DATA:\n" + userContext,
       tools: [{ googleSearch: {} }],
-      thinkingConfig: { thinkingBudget: 32768 },
+      thinkingConfig: { thinkingBudget: 0 }, // Disable thinking for lowest latency
       temperature: 0.1
     }
   });
@@ -83,17 +83,16 @@ export const getGeminiProResponse = async (
 
 /**
  * Fetches a market update using Google Search grounding.
- * Added to resolve missing export error in AdminDashboard.tsx
  */
-// Added missing getMarketUpdate function required by AdminDashboard.tsx
 export const getMarketUpdate = async (prompt: string) => {
   const ai = getAI();
   const response = await ai.models.generateContent({
-    model: "gemini-3-pro-preview",
+    model: "gemini-3-flash-preview", // Switched to Flash for maximum speed
     contents: prompt,
     config: {
       systemInstruction: SYSTEM_INSTRUCTION + "\n\nProvide a high-level institutional market summary and strategic update based on current data.",
       tools: [{ googleSearch: {} }],
+      thinkingConfig: { thinkingBudget: 0 }, // Disable thinking for lowest latency
       temperature: 0.1
     }
   });

@@ -84,7 +84,7 @@ export const AdminDashboard: React.FC = () => {
     marketSentiment: "Cautiously Bullish"
   });
 
-  const [wisdomText, setWisdomText] = useState("Focus on institutional-grade allocation. Protect the principal, then seek the growth.");
+  const [wisdomText, setWisdomText] = useState("Focus on Financial Wisdom-grade allocation. Protect the principal, then seek the growth.");
   const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
@@ -148,10 +148,6 @@ export const AdminDashboard: React.FC = () => {
     return asset ? asset.value : 0;
   };
 
-  /**
-   * Generates a data array for export.
-   * Fixed TypeScript error by using spread operator and explicit typing to allow mixed string and number arrays.
-   */
   const generateDataArray = (): (string | number)[][] => {
     const headers: string[] = [
       "Client Name", "Phone number", "Email id", "Risk Score", 
@@ -182,7 +178,6 @@ export const AdminDashboard: React.FC = () => {
       ];
     });
 
-    // Use spread and explicit cast to resolve the concat overload issue
     return [headers as (string | number)[], ...rows];
   };
 
@@ -297,7 +292,9 @@ export const AdminDashboard: React.FC = () => {
           <div className="p-10 border-b border-gray-100 dark:border-blue-900">
             <div className="flex flex-col xl:flex-row justify-between items-center gap-6 mb-8">
               <div>
-                <h3 className="text-2xl font-serif font-bold text-blue-950 dark:text-white uppercase tracking-tight">Institutional Client Master Ledger</h3>
+                <h3 className="text-2xl font-serif font-bold text-blue-950 dark:text-white uppercase tracking-tight">
+                   <span className="text-emerald-500 font-normal">Financial Wisdom</span> Client Master Ledger
+                </h3>
                 <p className="text-[10px] text-amber-600 font-black uppercase tracking-[0.3em] mt-2">Vision Tracking System • All Records Enabled</p>
               </div>
               <div className="flex items-center space-x-4 w-full xl:w-auto">

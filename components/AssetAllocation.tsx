@@ -51,7 +51,9 @@ export const AssetAllocation: React.FC<AssetAllocationProps> = ({ userData, onUp
       <div className="flex justify-between items-center mb-10">
         <div>
           <h3 className="text-2xl font-serif font-bold text-[#001040] dark:text-white uppercase tracking-tight">Current Asset Allocation</h3>
-          <p className="text-[10px] text-amber-600 font-black uppercase tracking-[0.3em] mt-2">Institutional-Grade Portfolio Management</p>
+          <p className="text-[10px] text-gray-500 font-black uppercase tracking-[0.3em] mt-2">
+             <span className="text-emerald-500 font-normal">Financial Wisdom</span>-Grade Portfolio Management
+          </p>
         </div>
         <div className="bg-amber-500/10 px-6 py-3 rounded-2xl border border-amber-500/20">
           <span className="text-[10px] font-black text-amber-600 uppercase tracking-widest">Client Ledger Mode</span>
@@ -97,7 +99,7 @@ export const AssetAllocation: React.FC<AssetAllocationProps> = ({ userData, onUp
                       type="text"
                       value={remark}
                       onChange={(e) => handleRemarkChange(ac.key, e.target.value)}
-                      placeholder="Add institutional note..."
+                      placeholder="Add Financial Wisdom note..."
                       className="w-full px-4 py-3 bg-gray-50 dark:bg-blue-900/30 border border-transparent focus:border-amber-500 rounded-xl font-medium text-xs text-[#001040] dark:text-blue-100 outline-none transition-all group-hover:bg-white dark:group-hover:bg-blue-900/50 italic"
                     />
                   </td>
@@ -121,7 +123,9 @@ export const AssetAllocation: React.FC<AssetAllocationProps> = ({ userData, onUp
                <div key={i} className="w-6 h-6 rounded-full bg-[#001040] dark:bg-white border-2 border-white dark:border-blue-950 flex items-center justify-center text-[8px] font-black text-white dark:text-[#001040]">🦅</div>
             ))}
           </div>
-          <p className="text-[9px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-[0.2em]">Institutional remarks are encrypted and secured</p>
+          <p className="text-[9px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-[0.2em]">
+            <span className="text-emerald-500 font-normal">Financial Wisdom</span> remarks are encrypted and secured
+          </p>
         </div>
         <p className="text-[10px] text-amber-600 font-black uppercase tracking-widest italic animate-pulse">Syncing Vision...</p>
       </div>

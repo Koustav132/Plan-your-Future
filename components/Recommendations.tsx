@@ -50,22 +50,24 @@ export const Recommendations: React.FC<{ userData: UserData }> = ({ userData }) 
                   {category} VISION 🦅
                 </div>
              </div>
-             <h3 className="text-4xl font-serif font-bold text-[#001040] dark:text-white uppercase tracking-tight leading-none">{persona}</h3>
-             <p className="text-xl text-gray-600 dark:text-blue-100/70 font-medium italic leading-relaxed">"{philosophy}"</p>
+             <h3 className="text-4xl font-extrabold text-[#001040] dark:text-white uppercase tracking-tighter leading-none">{persona}</h3>
+             <p className="text-xl text-gray-600 dark:text-blue-100/70 font-semibold italic leading-relaxed">"{philosophy}"</p>
           </div>
           <div className="bg-gray-50 dark:bg-blue-900/30 p-10 rounded-[40px] text-center border border-gray-100 dark:border-blue-900 shadow-inner flex flex-col justify-center min-w-[180px]">
              <p className="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">Algorithm Score</p>
-             <p className="text-6xl font-black text-[#001040] dark:text-white leading-none">{score}<span className="text-xl text-gray-300 dark:text-gray-600">/60</span></p>
+             <p className="text-6xl font-black text-[#001040] dark:text-white leading-none tracking-tighter">{score}<span className="text-xl text-gray-300 dark:text-gray-600 font-medium">/60</span></p>
           </div>
         </div>
         <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/5 rounded-full blur-3xl -mr-40 -mt-40"></div>
       </div>
 
       {/* Logic Analysis Card */}
-      <div className="bg-slate-50 dark:bg-blue-900/10 p-10 rounded-[40px] border border-gray-100 dark:border-blue-900/30">
+      <div className="bg-slate-50 dark:bg-blue-950/10 p-10 rounded-[40px] border border-gray-100 dark:border-blue-900/30">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
           <div>
-            <h4 className="text-[10px] font-black text-amber-600 uppercase tracking-[0.4em] mb-2">Strategic Logic Path</h4>
+            <h4 className="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.4em] mb-2">
+               Strategic <span className="text-emerald-500 font-normal">Financial Wisdom</span> Path
+            </h4>
             <p className="text-sm font-bold text-[#001040] dark:text-blue-100 uppercase tracking-widest">{logicDesc}</p>
           </div>
           <div className="flex space-x-2">
@@ -75,7 +77,7 @@ export const Recommendations: React.FC<{ userData: UserData }> = ({ userData }) 
           </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-[11px] font-bold text-gray-400 dark:text-blue-200/40 uppercase tracking-widest">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-[11px] font-black text-gray-400 dark:text-blue-200/40 uppercase tracking-widest">
            <div className={score >= 6 && score < 21 ? 'text-amber-600 opacity-100' : 'opacity-40'}>CONSERVATIVE: 6-20</div>
            <div className={score >= 21 && score <= 40 ? 'text-amber-600 opacity-100' : 'opacity-40 text-center'}>MODERATE: 21-40</div>
            <div className={score > 40 ? 'text-amber-600 opacity-100 text-right' : 'opacity-40 text-right'}>AGGRESSIVE: 41-60</div>
@@ -88,8 +90,8 @@ export const Recommendations: React.FC<{ userData: UserData }> = ({ userData }) 
           <div key={i} className="bg-white dark:bg-[#001a40] p-10 rounded-[40px] border border-gray-100 dark:border-blue-900 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 group relative overflow-hidden flex flex-col h-full">
             <div className="absolute top-0 right-0 w-16 h-16 bg-amber-500/5 group-hover:bg-amber-500/10 transition-colors rounded-full -mr-8 -mt-8"></div>
             <span className="text-[10px] font-black text-amber-600 uppercase tracking-widest mb-6 block">{r.tag} Focus</span>
-            <h4 className="text-2xl font-serif font-bold text-[#001040] dark:text-white mb-4 group-hover:text-amber-500 transition-colors">{r.title}</h4>
-            <p className="text-sm text-gray-600 dark:text-blue-100/60 leading-relaxed font-medium mb-10 flex-grow">{r.desc}</p>
+            <h4 className="text-2xl font-black text-[#001040] dark:text-white mb-4 group-hover:text-amber-500 transition-colors uppercase tracking-tight">{r.title}</h4>
+            <p className="text-sm text-gray-600 dark:text-blue-100/60 leading-relaxed font-semibold mb-10 flex-grow">{r.desc}</p>
             <a 
               href="https://planyourfuture.themfbox.com/" 
               target="_blank" 
@@ -106,8 +108,10 @@ export const Recommendations: React.FC<{ userData: UserData }> = ({ userData }) 
       <div className="p-12 bg-[#001040] dark:bg-amber-500 rounded-[50px] text-white dark:text-[#001040] shadow-2xl relative overflow-hidden">
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
            <div className="text-center md:text-left flex-1">
-              <h4 className="text-[10px] font-black uppercase tracking-[0.4em] opacity-60 mb-4">Institutional Professional Team</h4>
-              <p className="text-2xl font-serif font-bold italic leading-snug">
+              <h4 className="text-[10px] font-black uppercase tracking-[0.4em] opacity-60 mb-4">
+                 <span className="text-emerald-500 font-normal">Financial Wisdom</span> Team
+              </h4>
+              <p className="text-2xl font-black italic leading-snug tracking-tight">
                 "Our proprietary algorithm translates your risk behavioral data into a diversified roadmap that respects both capital protection and growth aspirations."
               </p>
               <div className="mt-6 flex items-center space-x-3 justify-center md:justify-start">
