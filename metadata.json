@@ -1,0 +1,12 @@
+{
+  "name": "Plan Your Future",
+  "short_name": "PlanFuture",
+  "description": "Professional wealth management and institutional financial logic led by Mr. Koustav Biswas. Official Gateway: www.planfuture.in",
+  "start_url": "https://www.planfuture.in",
+  "display": "standalone",
+  "background_color": "#001040",
+  "theme_color": "#001040",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
