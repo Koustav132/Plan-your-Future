@@ -59,7 +59,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "model",
-      content: `Namaste. I am Financial Guruji. 🦅\n\nI am here to lead a deep discussion on your wealth journey. My insights are based on 20 years of deep Global Financial Wisdom.\n\nYou can share your financial statements or ledger documents for a deep descriptive and predictive audit.`,
+      content: `Namaste. I am Financial Guruji. 🦅\n\nI am here to lead a deep discussion on your wealth journey. My insights are based on 20 years of deep Financial Wisdom.\n\nYou can share your financial statements or ledger documents for a deep descriptive and predictive discussion.`,
       timestamp: new Date()
     }
   ]);
@@ -180,7 +180,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
 
     const userMsg: Message = {
       role: 'user',
-      content: finalInput || `Ledger document [${selectedFile?.name}] provided for Global Financial Wisdom audit.`,
+      content: finalInput || `Ledger document [${selectedFile?.name}] provided for Global Financial Wisdom discussion.`,
       timestamp: new Date(),
       image: selectedFile && selectedFile.type.startsWith('image/') ? selectedFile.data : undefined
     };
