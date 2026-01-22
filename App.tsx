@@ -1,22 +1,16 @@
 
-import React, { useState, Suspense, lazy } from 'react';
-import { BRAND_NAVY, BRAND_GREEN, PRODUCTION_URL } from './constants';
+import React, { useState, Suspense, lazy, useRef } from 'react';
+import { BRAND_NAVY, PRODUCTION_URL } from './constants';
 import { ChatWindow } from './components/ChatWindow';
-import { PublicHome } from './components/PublicHome';
-import { UserData, AssetCategory, FinancialGoal } from './types';
+import { UserData } from './types';
 import { Button } from './components/Button';
 
-// Lazy load heavy components
+// Lazy load calculators for better initial load speed
 const SIPCalculator = lazy(() => import('./components/Calculator').then(m => ({ default: m.SIPCalculator })));
 const LoanCalculator = lazy(() => import('./components/Calculator').then(m => ({ default: m.LoanCalculator })));
 const RetirementCalculator = lazy(() => import('./components/Calculator').then(m => ({ default: m.RetirementCalculator })));
 const ChildEducationCalculator = lazy(() => import('./components/Calculator').then(m => ({ default: m.ChildEducationCalculator })));
 const SWPCalculator = lazy(() => import('./components/Calculator').then(m => ({ default: m.SWPCalculator })));
-const RiskProfiler = lazy(() => import('./components/RiskProfiler').then(m => ({ default: m.RiskProfiler })));
-const AssetAllocation = lazy(() => import('./components/AssetAllocation').then(m => ({ default: m.AssetAllocation })));
-const Recommendations = lazy(() => import('./components/Recommendations').then(m => ({ default: m.Recommendations })));
-const GoalsTracker = lazy(() => import('./components/GoalsTracker').then(m => ({ default: m.GoalsTracker })));
-const KeyNoteSpace = lazy(() => import('./components/KeyNoteSpace').then(m => ({ default: m.KeyNoteSpace })));
 
 const INITIAL_USER: UserData = {
   name: "Valued Investor",
@@ -25,13 +19,7 @@ const INITIAL_USER: UserData = {
   role: 'client',
   riskScore: 35,
   portfolioValue: 1250000,
-  assets: [
-    { category: 'Equity', value: 750000, remark: '' },
-    { category: 'Bond', value: 300000, remark: '' },
-    { category: 'Gold', value: 100000, remark: '' },
-    { category: 'FD', value: 100000, remark: '' }
-  ],
-  notes: "",
+  assets: [],
   goals: []
 };
 
@@ -45,50 +33,29 @@ const Loader = () => (
 );
 
 const App: React.FC = () => {
-  const [currentView, setCurrentView] = useState<'home' | 'portal'>('home');
   const [userData, setUserData] = useState<UserData>(INITIAL_USER);
-  const [activeTab, setActiveTab] = useState<'vision' | 'guru' | 'tools' | 'profile'>('guru');
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  
+  const guruRef = useRef<HTMLDivElement>(null);
+  const toolsRef = useRef<HTMLDivElement>(null);
 
-  const handleUpdateAssets = (newAssets: AssetCategory[]) => {
-    const total = newAssets.reduce((acc, curr) => acc + curr.value, 0);
-    setUserData(prev => ({ ...prev, assets: newAssets, portfolioValue: total }));
+  const scrollTo = (ref: React.RefObject<HTMLDivElement | null>) => {
+    ref.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const handleAddGoal = (goal: FinancialGoal) => {
-    setUserData(prev => ({ ...prev, goals: [...prev.goals, goal] }));
-  };
-
-  const handleUpdateGoal = (updatedGoal: FinancialGoal) => {
-    setUserData(prev => ({
-      ...prev,
-      goals: prev.goals.map(g => g.id === updatedGoal.id ? updatedGoal : g)
-    }));
-  };
-
-  const handleDeleteGoal = (id: string) => {
-    setUserData(prev => ({
-      ...prev,
-      goals: prev.goals.filter(g => g.id !== id)
-    }));
-  };
-
-  if (currentView === 'home') {
-    return <PublicHome onStart={() => setCurrentView('portal')} />;
-  }
-
-  const tabs = [
-    { id: 'guru', label: 'Financial Guru', icon: '🦅' },
-    { id: 'vision', label: 'Vision', icon: '🔭' },
-    { id: 'tools', label: 'Tools', icon: '📊' },
-    { id: 'profile', label: 'Profile', icon: '👤' }
+  const investButtons = [
+    { name: "Mutual Funds", icon: "📈", url: "https://planyourfuture.themfbox.com/", desc: "Execution portal" },
+    { name: "Bonds & FD", icon: "🛡️", url: "https://stablemoney.in/?pid=Koustav%20Biswas", desc: "Fixed yields" },
+    { name: "Shares", icon: "📊", url: "https://angel-one.onelink.me/Wjgr/xtq5crdk", desc: "Direct trading" },
+    { name: "WhatsApp", icon: "💬", url: "https://wa.me/919830560706", desc: "Consult Team" }
   ];
 
   return (
-    <div className={`min-h-screen pb-20 md:pb-0 ${theme === 'dark' ? 'dark bg-[#000814]' : 'bg-slate-50'} transition-colors duration-300`}>
+    <div className={`min-h-screen ${theme === 'dark' ? 'dark bg-[#000814]' : 'bg-white'} transition-colors duration-300`}>
+      {/* Institutional Navigation */}
       <nav className="bg-white dark:bg-[#001040] border-b border-gray-100 dark:border-blue-900 sticky top-0 z-50 shadow-sm px-4 md:px-8">
         <div className="max-w-7xl mx-auto flex justify-between h-16 md:h-20 items-center">
-          <div className="flex items-center space-x-2 md:space-x-3 cursor-pointer" onClick={() => setCurrentView('home')}>
+          <div className="flex items-center space-x-2 md:space-x-3 cursor-pointer">
             <div className="w-8 h-8 bg-[#001040] dark:bg-amber-500 rounded-lg flex items-center justify-center text-white dark:text-[#001040] text-sm font-black shadow-lg">🦅</div>
             <div className="flex flex-col">
               <h1 className="font-extrabold text-base md:text-xl text-[#001040] dark:text-white uppercase tracking-tight leading-none">Plan Your Future</h1>
@@ -97,19 +64,9 @@ const App: React.FC = () => {
           </div>
           
           <div className="hidden md:flex space-x-8">
-            {tabs.map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                className={`text-[10px] font-black uppercase tracking-[0.25em] py-2 border-b-2 transition-all relative ${
-                  activeTab === tab.id 
-                  ? 'border-amber-500 text-[#001040] dark:text-amber-400' 
-                  : 'border-transparent text-gray-400 hover:text-amber-500'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
+            <button onClick={() => scrollTo(guruRef)} className="text-[9px] font-black uppercase tracking-[0.25em] text-gray-400 hover:text-amber-500 transition-colors">Financial Guru</button>
+            <button onClick={() => scrollTo(toolsRef)} className="text-[9px] font-black uppercase tracking-[0.25em] text-gray-400 hover:text-amber-500 transition-colors">Strategic Tools</button>
+            <a href="https://planyourfuture.themfbox.com/" target="_blank" rel="noreferrer" className="text-[9px] font-black uppercase tracking-[0.25em] text-emerald-500 hover:text-emerald-400 transition-colors">Login 🏛️</a>
           </div>
 
           <div className="flex items-center space-x-2 md:space-x-4">
@@ -121,122 +78,133 @@ const App: React.FC = () => {
             >
               {theme === 'light' ? '🌙' : '☀️'}
             </Button>
-            <button onClick={() => setCurrentView('home')} className="text-[9px] font-black text-gray-400 uppercase tracking-widest hover:text-red-500 transition-colors">Logout</button>
+            <Button onClick={() => window.open('https://wa.me/919830560706')} className="hidden sm:flex bg-[#001040] dark:bg-amber-500 dark:text-[#001040] text-[9px] font-black uppercase tracking-widest px-4 py-2 rounded-xl shadow-lg">Consult Professional</Button>
           </div>
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-10">
-        <Suspense fallback={<Loader />}>
-          {activeTab === 'guru' && (
-            <div className="max-w-5xl mx-auto animate-in fade-in duration-300">
-              <div className="mb-6 md:mb-10 text-center">
-                <h2 className="text-3xl md:text-4xl font-black text-[#001040] dark:text-white uppercase tracking-tighter mb-2">Financial Guruji 🦅</h2>
-                <p className="text-gray-600 dark:text-blue-100/40 font-black uppercase tracking-widest text-[8px] md:text-[10px] bg-slate-100 dark:bg-blue-900/20 inline-block px-3 py-1 rounded-full">
-                  Neural <span className="text-emerald-500 font-normal">Global Financial Wisdom</span> Stream Active
-                </p>
-              </div>
-              <ChatWindow userData={userData} />
-            </div>
-          )}
+      {/* Hero Section */}
+      <section className="relative pt-16 pb-20 overflow-hidden px-4 md:px-8 bg-slate-50 dark:bg-blue-950/10">
+        <div className="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:40px_40px]"></div>
+        <div className="max-w-7xl mx-auto text-center space-y-8 relative z-10">
+          <div className="space-y-4">
+            <h2 className="text-4xl lg:text-7xl font-black text-[#001040] dark:text-white uppercase leading-none tracking-tighter max-w-5xl mx-auto">
+              Elevate Your <span className="text-emerald-500 font-normal">Financial Wisdom</span> with Institutional Precision
+            </h2>
+            <p className="text-lg md:text-xl text-gray-500 dark:text-blue-100/60 font-medium max-w-2xl mx-auto">
+              Visionary wealth management founded by Mr. Koustav Biswas. Protect. Grow. Endure.
+            </p>
+          </div>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Button onClick={() => scrollTo(guruRef)} size="lg" className="rounded-2xl px-10 py-5 bg-[#001040] dark:bg-amber-500 dark:text-[#001040] font-black text-[11px] uppercase tracking-widest shadow-2xl">Consult Financial Guruji 🦅</Button>
+            <Button onClick={() => scrollTo(toolsRef)} variant="outline" size="lg" className="rounded-2xl px-10 py-5 font-black text-[11px] uppercase tracking-widest dark:border-blue-700 dark:text-blue-100">Access Global Tools 📊</Button>
+          </div>
+        </div>
+      </section>
 
-          {activeTab === 'vision' && (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-10 animate-in fade-in duration-300">
-              <div className="lg:col-span-2 space-y-6 md:space-y-10">
-                <Recommendations userData={userData} />
-                <GoalsTracker 
-                  goals={userData.goals} 
-                  onAddGoal={handleAddGoal} 
-                  onUpdateGoal={handleUpdateGoal} 
-                  onDeleteGoal={handleDeleteGoal} 
-                />
-              </div>
-              <div className="space-y-6 md:space-y-10">
-                <AssetAllocation userData={userData} onUpdateAssets={handleUpdateAssets} />
-                <KeyNoteSpace notes={userData.notes} onUpdate={(val) => setUserData({ ...userData, notes: val })} />
+      {/* Financial Guru Interaction */}
+      <section ref={guruRef} className="max-w-7xl mx-auto px-4 md:px-8 py-20 animate-in fade-in duration-700">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+          <div className="lg:col-span-8">
+            <ChatWindow userData={userData} />
+          </div>
+          <div className="lg:col-span-4 space-y-8">
+            <div className="bg-[#fcfdfe] dark:bg-[#001040] p-10 rounded-[40px] border border-gray-100 dark:border-blue-900 shadow-xl relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform"></div>
+              <h4 className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.3em] mb-4">Vision Execution</h4>
+              <p className="text-sm font-bold text-[#001040] dark:text-white leading-relaxed mb-10">
+                Direct access to our execution portals for Mutual Funds, Bonds, and Global Assets. 
+              </p>
+              <div className="grid grid-cols-1 gap-3">
+                {investButtons.map((btn, i) => (
+                  <a key={i} href={btn.url} target="_blank" rel="noreferrer" className="flex items-center justify-between p-4 bg-white dark:bg-blue-900/40 border border-gray-50 dark:border-blue-800 rounded-2xl hover:border-amber-500 transition-all shadow-sm">
+                    <div className="flex items-center space-x-3">
+                      <span className="text-xl">{btn.icon}</span>
+                      <div className="text-left">
+                        <p className="text-[10px] font-black text-[#001040] dark:text-white uppercase tracking-wider">{btn.name}</p>
+                        <p className="text-[8px] text-gray-400 font-bold uppercase tracking-widest">{btn.desc}</p>
+                      </div>
+                    </div>
+                    <span className="text-gray-300">→</span>
+                  </a>
+                ))}
               </div>
             </div>
-          )}
+          </div>
+        </div>
+      </section>
 
-          {activeTab === 'tools' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 animate-in fade-in duration-300">
+      {/* Strategic Tools Section */}
+      <section ref={toolsRef} className="bg-slate-50 dark:bg-[#000c24] py-24 px-4 md:px-8 border-y border-gray-100 dark:border-blue-900/30">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-16 text-center">
+            <h3 className="text-3xl md:text-5xl font-black text-[#001040] dark:text-white uppercase tracking-tighter mb-4">Strategic Frameworks 📊</h3>
+            <p className="text-gray-500 dark:text-blue-100/40 font-black uppercase tracking-[0.4em] text-[10px]">Institutional Grade Numerical Vision</p>
+          </div>
+          <Suspense fallback={<Loader />}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               <RetirementCalculator />
               <SIPCalculator />
               <ChildEducationCalculator />
               <SWPCalculator />
               <LoanCalculator />
-            </div>
-          )}
-          
-          {activeTab === 'profile' && (
-            <div className="space-y-8 md:space-y-12 animate-in fade-in duration-300">
-              <div className="bg-white dark:bg-[#001040] p-6 md:p-14 rounded-[30px] md:rounded-[40px] shadow-xl border border-gray-100 dark:border-blue-900/40 max-w-4xl mx-auto">
-                <h2 className="text-xl md:text-2xl font-extrabold text-[#001040] dark:text-white uppercase mb-6 md:mb-8 tracking-tighter">Investor Vision Profile</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="space-y-4 md:space-y-6">
-                    <div>
-                      <label className="block text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] mb-1">Name</label>
-                      <input 
-                        type="text" 
-                        value={userData.name}
-                        onChange={(e) => setUserData({...userData, name: e.target.value})}
-                        className="w-full bg-slate-50 dark:bg-blue-950/40 p-3 md:p-4 rounded-xl border-none font-bold dark:text-white outline-none"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[9px] font-black text-gray-400 uppercase tracking-[0.3em] mb-1">Email</label>
-                      <input 
-                        type="text" 
-                        value={userData.email}
-                        onChange={(e) => setUserData({...userData, email: e.target.value})}
-                        className="w-full bg-slate-50 dark:bg-blue-950/40 p-3 md:p-4 rounded-xl border-none font-bold dark:text-white outline-none"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="bg-slate-50 dark:bg-blue-950/50 p-6 md:p-10 rounded-[30px] md:rounded-[40px] flex flex-col items-center justify-center text-center">
-                     <p className="text-[9px] font-black text-gray-400 uppercase tracking-[0.4em] mb-1">Alpha Score</p>
-                     <p className="text-5xl md:text-6xl font-black text-[#001040] dark:text-white tracking-tighter">{userData.riskScore}<span className="text-xl text-gray-300 font-medium">/60</span></p>
-                  </div>
-                </div>
-              </div>
-              <div className="max-w-4xl mx-auto px-1">
-                <RiskProfiler onComplete={(score) => setUserData({...userData, riskScore: score})} />
+              <div className="p-8 bg-white dark:bg-[#001040] rounded-[40px] shadow-sm border border-gray-100 dark:border-blue-900 flex flex-col items-center justify-center text-center space-y-6">
+                 <div className="w-16 h-16 bg-amber-500/10 rounded-full flex items-center justify-center text-3xl">📡</div>
+                 <h4 className="text-lg font-black text-[#001040] dark:text-white uppercase tracking-tight">Need a Custom Audit?</h4>
+                 <p className="text-sm text-gray-500 dark:text-blue-100/40 font-medium">Connect with our Professional Team for complex wealth restructuring and offshore vision mapping.</p>
+                 <Button onClick={() => window.open('https://wa.me/919830560706')} className="w-full py-4 bg-[#001040] dark:bg-amber-500 text-white dark:text-[#001040] font-black text-[10px] uppercase tracking-widest">Speak to a Professional</Button>
               </div>
             </div>
-          )}
-        </Suspense>
-      </main>
+          </Suspense>
+        </div>
+      </section>
 
-      {/* Mobile Bottom Navigation */}
-      <div className="md:hidden fixed bottom-0 left-0 w-full bg-white dark:bg-[#001040] border-t border-gray-100 dark:border-blue-900 z-50 flex justify-around items-center py-2 px-1 shadow-2xl">
-        {tabs.map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
-            className={`flex flex-col items-center space-y-1 flex-1 py-1 transition-all ${
-              activeTab === tab.id ? 'text-amber-500' : 'text-gray-400'
-            }`}
-          >
-            <span className="text-lg">{tab.icon}</span>
-            <span className="text-[8px] font-black uppercase tracking-widest">{tab.label}</span>
-          </button>
-        ))}
-      </div>
-
-      <footer className="bg-white dark:bg-[#001040] py-12 md:py-16 mt-10 md:mt-20 border-t border-gray-100 dark:border-blue-900 px-4">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="mb-6 md:mb-8">
-            <a href={PRODUCTION_URL} target="_blank" rel="noreferrer" className="text-lg md:text-xl font-black text-[#001040] dark:text-white uppercase tracking-tight hover:text-amber-500 transition-colors">
-              www.planfuture.in
-            </a>
-            <p className="text-[8px] md:text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.4em] mt-2">
-              Official Digital <span className="text-emerald-500 font-normal">Global Financial Wisdom</span> Node
-            </p>
+      {/* Institutional Footer */}
+      <footer className="bg-white dark:bg-[#001040] py-20 px-4 md:px-8 border-t border-gray-100 dark:border-blue-900">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
+            <div className="space-y-6">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-[#001040] dark:bg-amber-500 rounded-xl flex items-center justify-center text-white dark:text-[#001040] text-xl font-black">🦅</div>
+                <h4 className="text-xl font-black text-[#001040] dark:text-white uppercase tracking-tight">Plan Your Future</h4>
+              </div>
+              <p className="text-xs text-gray-500 dark:text-blue-100/40 font-medium leading-relaxed">
+                Empowering the modern Indian investor with <span className="text-emerald-500">Global Financial Wisdom</span>. A vision of excellence led by Mr. Koustav Biswas.
+              </p>
+            </div>
+            <div>
+              <h5 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em] mb-6">Quick Vision Links</h5>
+              <ul className="space-y-4 text-xs font-bold text-[#001040] dark:text-blue-100/80">
+                <li><button onClick={() => scrollTo(guruRef)} className="hover:text-amber-500 transition-colors uppercase tracking-widest">Financial Guru</button></li>
+                <li><button onClick={() => scrollTo(toolsRef)} className="hover:text-amber-500 transition-colors uppercase tracking-widest">Strategic Tools</button></li>
+                <li><a href="https://planyourfuture.themfbox.com/" className="hover:text-amber-500 transition-colors uppercase tracking-widest">Client Portal</a></li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em] mb-6">Legacy Connect</h5>
+              <ul className="space-y-4 text-xs font-bold text-[#001040] dark:text-blue-100/80">
+                <li className="uppercase tracking-widest">West Bengal, India</li>
+                <li className="uppercase tracking-widest">wa.me/919830560706</li>
+                <li className="uppercase tracking-widest">www.planfuture.in</li>
+              </ul>
+            </div>
+            <div>
+               <h5 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em] mb-6">Authentication</h5>
+               <div className="p-4 bg-slate-50 dark:bg-blue-950/40 rounded-2xl border border-gray-100 dark:border-blue-900">
+                  <p className="text-[8px] font-black text-emerald-600 uppercase tracking-widest mb-2">Registered Entity</p>
+                  <p className="text-[10px] text-[#001040] dark:text-white font-bold">Mutual Fund Distributor (EUIN: E389902)</p>
+               </div>
+            </div>
           </div>
-          <p className="text-[8px] md:text-[10px] font-black text-gray-400 dark:text-blue-100/30 uppercase tracking-[0.6em] mb-4">Professional Leadership of Mr. Koustav Biswas</p>
-          <div className="max-w-4xl mx-auto text-left opacity-60 text-[8px] md:text-[10px] leading-relaxed border-t pt-6 px-2">
-            Disclaimer: Investing in the securities market carries inherent risks. I/We are acting as a Mutual Fund Distributor (EUIN: E389902). I/We do not provide investment advice.
+          
+          <div className="pt-10 border-t border-gray-50 dark:border-blue-900/40 text-center">
+            <p className="text-[10px] font-black text-gray-400 dark:text-blue-100/30 uppercase tracking-[0.6em] mb-8 leading-loose">
+              Disclaimer: Investing in the securities market carries inherent risks. Please read all relevant documents thoroughly before making any investment decisions. As a registered Authorized Person and Distributor, we do not charge additional fees for our value-added services; our remuneration comes from commissions or brokerage fees paid by product companies. All content provided is for education purposes only. I/We do not provide investment advice.
+            </p>
+            <div className="flex flex-col items-center space-y-2">
+              <a href={PRODUCTION_URL} target="_blank" rel="noreferrer" className="text-xs font-black text-[#001040] dark:text-white uppercase tracking-widest hover:text-amber-500">www.planfuture.in</a>
+              <p className="text-[7px] font-black text-emerald-500 uppercase tracking-[0.5em]">Professional Node of Mr. Koustav Biswas • Secure 🦅</p>
+            </div>
           </div>
         </div>
       </footer>

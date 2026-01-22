@@ -40,7 +40,6 @@ export interface UserData {
   riskScore: number;
   portfolioValue: number;
   assets: AssetCategory[];
-  notes: string;
   goals: FinancialGoal[];
 }
 

@@ -2,7 +2,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Message, UserData } from "../types";
 import { getGeminiProResponse, generateSpeech, transcribeAudio } from "../services/geminiService";
-import { Button } from "./Button";
 import { LiveAudioSession } from "./LiveAudioSession";
 import { GLOBAL_WISDOM_MAP } from "../constants";
 
@@ -56,6 +55,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
   const [selectedLanguage, setSelectedLanguage] = useState("English");
   const brandPhrase = GLOBAL_WISDOM_MAP[selectedLanguage] || GLOBAL_WISDOM_MAP["English"];
 
+  // Chat is strictly in-memory React state - no database or local storage persistence
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "model",
@@ -216,18 +216,18 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
   };
 
   return (
-    <div className="flex flex-col h-[70vh] md:h-[750px] bg-white dark:bg-[#000814] rounded-[30px] md:rounded-[50px] shadow-2xl overflow-hidden border border-gray-100 dark:border-blue-900/40">
+    <div className="flex flex-col h-[70vh] md:h-[750px] bg-white dark:bg-[#000814] rounded-[30px] md:rounded-[40px] shadow-2xl overflow-hidden border border-gray-100 dark:border-blue-900/40">
       {/* Premium Session Header */}
-      <div className="px-4 md:px-10 py-4 md:py-7 bg-[#fcfdfe] dark:bg-blue-950/20 flex items-center justify-between border-b border-gray-100 dark:border-blue-900/40">
+      <div className="px-4 md:px-10 py-4 md:py-6 bg-[#fcfdfe] dark:bg-blue-950/20 flex items-center justify-between border-b border-gray-100 dark:border-blue-900/40">
         <div className="flex items-center space-x-3 md:space-x-5">
-          <div className="w-10 h-10 md:w-14 md:h-14 bg-[#001040] dark:bg-amber-500 rounded-xl md:rounded-2xl flex items-center justify-center text-white dark:text-[#001040] text-xl md:text-3xl shadow-xl">🦅</div>
+          <div className="w-10 h-10 md:w-12 md:h-12 bg-[#001040] dark:bg-amber-500 rounded-xl flex items-center justify-center text-white dark:text-[#001040] text-xl md:text-2xl shadow-xl">🦅</div>
           <div className="min-w-0">
-            <h3 className="font-extrabold text-xs md:text-2xl text-[#001040] dark:text-white uppercase tracking-tighter truncate">
+            <h3 className="font-extrabold text-xs md:text-xl text-[#001040] dark:text-white uppercase tracking-tighter truncate">
                <span className="text-emerald-500 font-normal">{brandPhrase}</span> <span className="text-emerald-500">Session</span>
             </h3>
             <div className="flex items-center space-x-1.5 md:space-x-2">
               <span className="w-1.5 h-1.5 md:w-2 md:h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-              <p className="text-[7px] md:text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600">
+              <p className="text-[7px] md:text-[9px] font-black uppercase tracking-[0.2em] text-emerald-600">
                 <span className="text-emerald-500 font-normal">{brandPhrase}</span> Node Active
               </p>
             </div>
@@ -247,9 +247,9 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
 
           <button 
             onClick={() => setIsLiveOpen(true)} 
-            className="p-2 md:p-4 bg-amber-500 text-[#001040] rounded-xl md:rounded-2xl shadow-lg hover:scale-105 transition-transform"
+            className="p-2 md:p-3 bg-amber-500 text-[#001040] rounded-xl shadow-lg hover:scale-105 transition-transform"
           >
-            <svg className="w-4 h-4 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg>
+            <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg>
           </button>
         </div>
       </div>
@@ -260,7 +260,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
             <div className={`max-w-[95%] md:max-w-[92%] relative ${msg.role === 'user' ? 'text-right' : 'text-left w-full'}`}>
               
               {msg.role === 'model' ? (
-                <div className="bg-[#f8fafb] dark:bg-[#000e2e] p-6 md:p-10 rounded-[30px] md:rounded-[40px] border border-gray-50 dark:border-blue-900/40 shadow-sm relative group">
+                <div className="bg-[#f8fafb] dark:bg-[#000e2e] p-6 md:p-10 rounded-[25px] md:rounded-[35px] border border-gray-50 dark:border-blue-900/40 shadow-sm relative group">
                   <div className="flex items-center space-x-2 md:space-x-3 mb-4 md:mb-6 opacity-40">
                      <span className="text-[7px] md:text-[9px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-emerald-600 whitespace-nowrap">
                         <span className="text-emerald-500 font-normal">{brandPhrase}</span> Insight 🏛️
@@ -352,9 +352,9 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
           </div>
         )}
         
-        <div className="flex items-center space-x-2 md:space-x-4 bg-white dark:bg-[#000814] p-2 md:p-3 rounded-[20px] md:rounded-[35px] border border-gray-100 dark:border-blue-900/50 shadow-sm">
+        <div className="flex items-center space-x-2 md:space-x-4 bg-white dark:bg-[#000814] p-2 md:p-3 rounded-[20px] md:rounded-[30px] border border-gray-100 dark:border-blue-900/50 shadow-sm">
           <button onClick={() => fileInputRef.current?.click()} className="p-2 md:p-3 text-gray-300 hover:text-emerald-500">
-            <svg className="w-5 h-5 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.414a4 4 0 00-5.656-5.656l-6.415 6.414a6 6 0 108.486 8.486L20.5 13" /></svg>
+            <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.414a4 4 0 00-5.656-5.656l-6.415 6.414a6 6 0 108.486 8.486L20.5 13" /></svg>
           </button>
           <input type="file" ref={fileInputRef} onChange={handleFileSelect} accept="image/*,.pdf" className="hidden" />
           
@@ -362,7 +362,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
             onClick={handleToggleTranscription} 
             className={`p-2 md:p-3 rounded-xl transition-all ${isTranscribing ? 'bg-red-500 text-white animate-pulse' : 'text-gray-300 hover:text-emerald-500'}`}
           >
-            <svg className="w-5 h-5 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg>
+            <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg>
           </button>
 
           <input 
@@ -377,7 +377,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
           <button 
             onClick={() => handleSend()} 
             disabled={isLoading} 
-            className="p-3 md:p-4 bg-[#001040] dark:bg-emerald-500 text-white dark:text-[#001040] rounded-xl md:rounded-[24px] hover:scale-105 active:scale-95 disabled:opacity-50"
+            className="p-3 md:p-4 bg-[#001040] dark:bg-emerald-500 text-white dark:text-[#001040] rounded-xl md:rounded-[20px] hover:scale-105 active:scale-95 disabled:opacity-50"
           >
             <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3.5" d="M13 5l7 7-7 7" /></svg>
           </button>
