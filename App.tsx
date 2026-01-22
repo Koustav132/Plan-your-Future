@@ -84,7 +84,7 @@ const App: React.FC = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-16 pb-20 overflow-hidden px-4 md:px-8 bg-slate-50 dark:bg-blue-950/10">
+      <section className="relative pt-16 pb-12 overflow-hidden px-4 md:px-8 bg-slate-50 dark:bg-blue-950/10">
         <div className="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:40px_40px]"></div>
         <div className="max-w-7xl mx-auto text-center space-y-8 relative z-10">
           <div className="space-y-4">
@@ -102,34 +102,23 @@ const App: React.FC = () => {
         </div>
       </section>
 
-      {/* Financial Guru Interaction */}
-      <section ref={guruRef} className="max-w-7xl mx-auto px-4 md:px-8 py-20 animate-in fade-in duration-700">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-          <div className="lg:col-span-8">
+      {/* Financial Guru Interaction - MASSIVE AI READING BOARD */}
+      <section ref={guruRef} className="max-w-7xl mx-auto px-0 md:px-8 py-8 md:py-16 animate-in fade-in duration-700">
+        <div className="flex flex-col space-y-8">
+          {/* Main Chat Board */}
+          <div className="w-full">
             <ChatWindow userData={userData} />
           </div>
-          <div className="lg:col-span-4 space-y-8">
-            <div className="bg-[#fcfdfe] dark:bg-[#001040] p-10 rounded-[40px] border border-gray-100 dark:border-blue-900 shadow-xl relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform"></div>
-              <h4 className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.3em] mb-4">Vision Execution</h4>
-              <p className="text-sm font-bold text-[#001040] dark:text-white leading-relaxed mb-10">
-                Direct access to our execution portals for Mutual Funds, Bonds, and Global Assets. 
-              </p>
-              <div className="grid grid-cols-1 gap-3">
-                {investButtons.map((btn, i) => (
-                  <a key={i} href={btn.url} target="_blank" rel="noreferrer" className="flex items-center justify-between p-4 bg-white dark:bg-blue-900/40 border border-gray-50 dark:border-blue-800 rounded-2xl hover:border-amber-500 transition-all shadow-sm">
-                    <div className="flex items-center space-x-3">
-                      <span className="text-xl">{btn.icon}</span>
-                      <div className="text-left">
-                        <p className="text-[10px] font-black text-[#001040] dark:text-white uppercase tracking-wider">{btn.name}</p>
-                        <p className="text-[8px] text-gray-400 font-bold uppercase tracking-widest">{btn.desc}</p>
-                      </div>
-                    </div>
-                    <span className="text-gray-300">→</span>
-                  </a>
-                ))}
-              </div>
-            </div>
+
+          {/* Quick Execution Links below the Board */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 px-4 md:px-0">
+            {investButtons.map((btn, i) => (
+              <a key={i} href={btn.url} target="_blank" rel="noreferrer" className="flex flex-col items-center justify-center p-6 bg-white dark:bg-[#001040] border border-gray-100 dark:border-blue-900 rounded-[30px] hover:border-amber-500 transition-all shadow-sm group">
+                <span className="text-3xl mb-3 group-hover:scale-110 transition-transform">{btn.icon}</span>
+                <p className="text-[10px] font-black text-[#001040] dark:text-white uppercase tracking-wider">{btn.name}</p>
+                <p className="text-[7px] text-gray-400 font-bold uppercase tracking-widest mt-1">{btn.desc}</p>
+              </a>
+            ))}
           </div>
         </div>
       </section>

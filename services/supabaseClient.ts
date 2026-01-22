@@ -1,7 +1,1 @@
-
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = 'https://ngjdvfxqebnvkexjaaee.supabase.co';
-const supabaseKey = process.env.SUPABASE_KEY as string;
-
-export const supabase = createClient(supabaseUrl, supabaseKey);
+// Deprecated: strictly no permanent data storage per user request.
