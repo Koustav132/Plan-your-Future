@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { Message, UserData } from "../types";
-import { getGeminiProResponse, generateSpeech, transcribeAudio } from "../services/geminiService";
+import { getGeminiFlashResponse, generateSpeech, transcribeAudio } from "../services/geminiService";
 import { LiveAudioSession } from "./LiveAudioSession";
 import { GLOBAL_WISDOM_MAP } from "../constants";
 
@@ -178,7 +178,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ userData }) => {
     setIsLoading(true);
 
     try {
-      const result = await getGeminiProResponse(
+      const result = await getGeminiFlashResponse(
         messages.concat(userMsg), 
         userData, 
         currentFile ? { data: currentFile.data, mimeType: currentFile.type } : undefined, 

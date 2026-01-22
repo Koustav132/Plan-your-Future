@@ -16,7 +16,7 @@ const sanitizeOutput = (text: string): string => {
     .trim();
 };
 
-export const getGeminiProResponse = async (
+export const getGeminiFlashResponse = async (
   messages: Message[],
   userData?: UserData,
   fileData?: { data: string; mimeType: string },
