@@ -47,7 +47,7 @@ const App: React.FC = () => {
     { name: "Mutual Funds", icon: "📈", url: "https://planyourfuture.themfbox.com/", desc: "Execution portal" },
     { name: "Bonds & FD", icon: "🛡️", url: "https://stablemoney.in/?pid=Koustav%20Biswas", desc: "Fixed yields" },
     { name: "Shares", icon: "📊", url: "https://angel-one.onelink.me/Wjgr/xtq5crdk", desc: "Direct trading" },
-    { name: "WhatsApp", icon: "💬", url: "https://wa.me/919830560706", desc: "Consult Team" }
+    { name: "Direct Voice", icon: "📞", url: "tel:9663393794", desc: "Speak Now" }
   ];
 
   return (
@@ -78,7 +78,7 @@ const App: React.FC = () => {
             >
               {theme === 'light' ? '🌙' : '☀️'}
             </Button>
-            <Button onClick={() => window.open('https://wa.me/919830560706')} className="hidden sm:flex bg-[#001040] dark:bg-amber-500 dark:text-[#001040] text-[9px] font-black uppercase tracking-widest px-4 py-2 rounded-xl shadow-lg">Consult Professional</Button>
+            <Button onClick={() => window.open('tel:9663393794')} className="hidden sm:flex bg-[#001040] dark:bg-amber-500 dark:text-[#001040] text-[9px] font-black uppercase tracking-widest px-4 py-2 rounded-xl shadow-lg">Call 9663393794</Button>
           </div>
         </div>
       </nav>
@@ -96,7 +96,7 @@ const App: React.FC = () => {
             </p>
           </div>
           <div className="flex flex-wrap justify-center gap-3 md:gap-4">
-            <Button onClick={() => scrollTo(guruRef)} size="lg" className="rounded-xl px-6 md:px-10 py-3 md:py-5 bg-[#001040] dark:bg-amber-500 dark:text-[#001040] font-black text-[10px] md:text-[11px] uppercase tracking-widest shadow-xl">Consult Financial Guruji 🦅</Button>
+            <Button onClick={() => window.open('tel:9663393794')} size="lg" className="rounded-xl px-6 md:px-10 py-3 md:py-5 bg-[#001040] dark:bg-amber-500 dark:text-[#001040] font-black text-[10px] md:text-[11px] uppercase tracking-widest shadow-xl">Call us to 9663393794 📞</Button>
           </div>
         </div>
       </section>
@@ -104,8 +104,8 @@ const App: React.FC = () => {
       {/* Financial Guru Interaction - MASSIVE AI READING BOARD */}
       <section ref={guruRef} className="max-w-7xl mx-auto px-0 md:px-8 py-2 md:py-16 animate-in fade-in duration-700">
         <div className="flex flex-col space-y-4 md:space-y-8">
-          {/* Main Chat Board - Expansive display area */}
-          <div className="w-full">
+          {/* Main Chat Board - Very responsive display area */}
+          <div className="w-full h-[700px] md:h-[800px]">
             <ChatWindow userData={userData} />
           </div>
 
@@ -139,8 +139,8 @@ const App: React.FC = () => {
               <div className="p-8 bg-white dark:bg-[#001040] rounded-[30px] md:rounded-[40px] shadow-sm border border-gray-100 dark:border-blue-900 flex flex-col items-center justify-center text-center space-y-4 md:space-y-6">
                  <div className="w-12 h-12 md:w-16 md:h-16 bg-amber-500/10 rounded-full flex items-center justify-center text-2xl md:text-3xl">📡</div>
                  <h4 className="text-base md:text-lg font-black text-[#001040] dark:text-white uppercase tracking-tight">Need a Custom Audit?</h4>
-                 <p className="text-[10px] md:text-sm text-gray-500 dark:text-blue-100/40 font-medium">Connect with our Professional Team for complex wealth restructuring.</p>
-                 <Button onClick={() => window.open('https://wa.me/919830560706')} className="w-full py-3 md:py-4 bg-[#001040] dark:bg-amber-500 text-white dark:text-[#001040] font-black text-[9px] md:text-[10px] uppercase tracking-widest rounded-xl">Speak to a Professional</Button>
+                 <p className="text-[10px] md:text-sm text-gray-500 dark:text-blue-100/40 font-medium">Connect with our team for deep wealth restructuring.</p>
+                 <Button onClick={() => window.open('tel:9663393794')} className="w-full py-3 md:py-4 bg-[#001040] dark:bg-amber-500 text-white dark:text-[#001040] font-black text-[9px] md:text-[10px] uppercase tracking-widest rounded-xl">Call 9663393794</Button>
               </div>
             </div>
           </Suspense>
@@ -163,8 +163,8 @@ const App: React.FC = () => {
             <div className="hidden md:block">
               <h5 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em] mb-6">Quick Vision Links</h5>
               <ul className="space-y-4 text-xs font-bold text-[#001040] dark:text-blue-100/80">
-                <li><button onClick={() => scrollTo(guruRef)} className="hover:text-amber-500 transition-colors uppercase tracking-widest">Financial Guru</button></li>
-                <li><button onClick={() => scrollTo(toolsRef)} className="hover:text-amber-500 transition-colors uppercase tracking-widest">Strategic Tools</button></li>
+                <li><button onClick={() => scrollTo(guruRef)} className="hover:text-amber-500 transition-colors uppercase tracking-widest text-left">Financial Guru</button></li>
+                <li><button onClick={() => scrollTo(toolsRef)} className="hover:text-amber-500 transition-colors uppercase tracking-widest text-left">Strategic Tools</button></li>
                 <li><a href="https://planyourfuture.themfbox.com/" className="hover:text-amber-500 transition-colors uppercase tracking-widest">Client Portal</a></li>
               </ul>
             </div>
@@ -172,7 +172,7 @@ const App: React.FC = () => {
               <h5 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.4em] mb-4 md:mb-6">Legacy Connect</h5>
               <ul className="space-y-2 md:space-y-4 text-[10px] md:text-xs font-bold text-[#001040] dark:text-blue-100/80">
                 <li className="uppercase tracking-widest">West Bengal, India</li>
-                <li className="uppercase tracking-widest">wa.me/919830560706</li>
+                <li className="uppercase tracking-widest">Direct Call: 9663393794</li>
                 <li className="uppercase tracking-widest">www.planfuture.in</li>
               </ul>
             </div>
@@ -187,11 +187,11 @@ const App: React.FC = () => {
           
           <div className="pt-8 md:pt-10 border-t border-gray-50 dark:border-blue-900/40 text-center">
             <p className="text-[8px] md:text-[10px] font-black text-gray-400 dark:text-blue-100/30 uppercase tracking-[0.4em] md:tracking-[0.6em] mb-6 md:mb-8 leading-loose px-2">
-              Disclaimer: Investing in the securities market carries inherent risks. Please read all relevant documents thoroughly before making any investment decisions. As a registered Authorized Person and Distributor, we do not charge additional fees for our value-added services; our remuneration comes from commissions or brokerage fees paid by product companies. All content provided is for education purposes only. I/We do not provide investment advice.
+              Disclaimer: Investing in the securities market carries inherent risks. Please read all relevant documents thoroughly before making any investment decisions. As a registered Authorized Person and Distributor, we do not charge additional fees for our value-added services. I/We do not provide investment advice.
             </p>
             <div className="flex flex-col items-center space-y-2">
               <a href={PRODUCTION_URL} target="_blank" rel="noreferrer" className="text-[10px] md:text-xs font-black text-[#001040] dark:text-white uppercase tracking-widest hover:text-amber-500">www.planfuture.in</a>
-              <p className="text-[6px] md:text-[7px] font-black text-emerald-500 uppercase tracking-[0.3em] md:tracking-[0.5em]">Professional Node of Mr. Koustav Biswas • Secure 🦅</p>
+              <p className="text-[6px] md:text-[7px] font-black text-emerald-500 uppercase tracking-[0.3em] md:tracking-[0.5em]">Professional Node of Mr. Koustav Biswas • Secure 🦅 • Call 9663393794</p>
             </div>
           </div>
         </div>

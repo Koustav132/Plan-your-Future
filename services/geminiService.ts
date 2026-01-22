@@ -20,7 +20,8 @@ export const getGeminiProResponse = async (
   messages: Message[],
   userData?: UserData,
   fileData?: { data: string; mimeType: string },
-  language: string = "English"
+  language: string = "English",
+  audioData?: { data: string; mimeType: string }
 ) => {
   const ai = getAI();
   const userContext = userData 
@@ -35,7 +36,7 @@ export const getGeminiProResponse = async (
   const lastMsg = messages[messages.length - 1];
   const currentParts: any[] = [{ text: lastMsg.content }];
 
-  let documentPrompt = "";
+  // Handle Document/Image Input
   if (fileData) {
     currentParts.push({
       inlineData: {
@@ -43,21 +44,31 @@ export const getGeminiProResponse = async (
         data: fileData.data.split(",")[1]
       }
     });
-    
-    documentPrompt = `
-    INSTRUCTIONS FOR DOCUMENT ANALYSIS:
-    The user has provided an institutional document or ledger image. 
-    1. PERFORM DESCRIPTIVE ANALYSIS: Extract all key facts, numerical values, and dates from the document.
-    2. PERFORM PREDICTIVE ANALYSIS: Based on the extracted data and the user's risk profile, provide logical forecasts or strategic implications.
-    3. Use professional, plain text only. Avoid formatting symbols.
-    `;
   }
+
+  // Handle Voice Input (Direct processing for speed)
+  if (audioData) {
+    currentParts.push({
+      inlineData: {
+        mimeType: audioData.mimeType,
+        data: audioData.data
+      }
+    });
+  }
+
+  const documentPrompt = fileData || audioData ? `
+    INSTRUCTIONS FOR MULTIMODAL ANALYSIS:
+    The user has provided a file (Image/PDF) or a Voice Recording.
+    1. If Voice: Listen to the query and respond instantly with Global Financial Wisdom.
+    2. If Document: Extract facts and provide descriptive/predictive analysis.
+    3. Response must be CLEAN, PLAIN TEXT only. No symbols.
+  ` : "";
 
   const languageInstruction = `CRITICAL: The user prefers to communicate in ${language}. 
   Please respond ONLY in ${language}. Maintain the Professional Guruji persona.`;
 
   const response = await ai.models.generateContent({
-    model: "gemini-3-flash-preview", // Switched to Flash for maximum speed
+    model: "gemini-3-flash-preview", 
     contents: [
       ...history.slice(0, -1),
       { role: "user", parts: currentParts }
@@ -65,14 +76,13 @@ export const getGeminiProResponse = async (
     config: {
       systemInstruction: SYSTEM_INSTRUCTION + "\n\n" + languageInstruction + "\n\n" + documentPrompt + "\n\nACTIVE SESSION DATA:\n" + userContext,
       tools: [{ googleSearch: {} }],
-      thinkingConfig: { thinkingBudget: 0 }, // Disable thinking for lowest latency
+      thinkingConfig: { thinkingBudget: 0 }, 
       temperature: 0.1
     }
   });
 
   const rawText = response.text || "I am currently processing deep market signals. Please rephrase or try again in a moment. 🦅";
   
-  // Extract grounding metadata safely
   const grounding = response.candidates?.[0]?.groundingMetadata?.groundingChunks;
   
   return {
@@ -81,18 +91,15 @@ export const getGeminiProResponse = async (
   };
 };
 
-/**
- * Fetches a market update using Google Search grounding.
- */
 export const getMarketUpdate = async (prompt: string) => {
   const ai = getAI();
   const response = await ai.models.generateContent({
-    model: "gemini-3-flash-preview", // Switched to Flash for maximum speed
+    model: "gemini-3-flash-preview",
     contents: prompt,
     config: {
       systemInstruction: SYSTEM_INSTRUCTION + "\n\nProvide a high-level institutional market summary and strategic update based on current data.",
       tools: [{ googleSearch: {} }],
-      thinkingConfig: { thinkingBudget: 0 }, // Disable thinking for lowest latency
+      thinkingConfig: { thinkingBudget: 0 },
       temperature: 0.1
     }
   });

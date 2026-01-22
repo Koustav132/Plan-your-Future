@@ -109,18 +109,18 @@ export const Recommendations: React.FC<{ userData: UserData }> = ({ userData }) 
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
            <div className="text-center md:text-left flex-1">
               <h4 className="text-[10px] font-black uppercase tracking-[0.4em] opacity-60 mb-4">
-                 <span className="text-emerald-500 font-normal">Financial Wisdom</span> Team
+                 Strategic Vision Support
               </h4>
               <p className="text-2xl font-black italic leading-snug tracking-tight">
-                "Our proprietary algorithm translates your risk behavioral data into a diversified roadmap that respects both capital protection and growth aspirations."
+                "Our team is ready to discuss your complex wealth restructuring queries via direct voice consultation."
               </p>
               <div className="mt-6 flex items-center space-x-3 justify-center md:justify-start">
                 <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs">🦅</div>
-                <p className="text-[10px] font-black uppercase tracking-widest opacity-80">Mr. Koustav Biswas (Founder)</p>
+                <p className="text-[10px] font-black uppercase tracking-widest opacity-80">Direct Voice Support: 9663393794</p>
               </div>
            </div>
-           <Button variant="outline" onClick={() => window.open('tel:+919830560706')} className="rounded-full px-12 py-5 border-white dark:border-[#001040] text-white dark:text-[#001040] font-black text-[11px] uppercase tracking-[0.35em] hover:bg-white hover:text-[#001040] dark:hover:bg-[#001040] dark:hover:text-white transition-all whitespace-nowrap shadow-xl">
-              CONSULT PROFESSIONAL 🦅
+           <Button variant="outline" onClick={() => window.open('tel:9663393794')} className="rounded-full px-12 py-5 border-white dark:border-[#001040] text-white dark:text-[#001040] font-black text-[11px] uppercase tracking-[0.35em] hover:bg-white hover:text-[#001040] dark:hover:bg-[#001040] dark:hover:text-white transition-all whitespace-nowrap shadow-xl">
+              CALL 9663393794 🦅
            </Button>
         </div>
       </div>
